@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pure tone audiogram</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+            crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <!-- alpaca -->
+    <link type="text/css" href="https://cdn.jsdelivr.net/npm/alpaca@1.5.27/dist/alpaca/bootstrap/alpaca.min.css"
+          rel="stylesheet"/>
+    <script type="text/javascript"
+            src="https://cdn.jsdelivr.net/npm/alpaca@1.5.27/dist/alpaca/bootstrap/alpaca.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+            integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+            crossorigin="anonymous"></script>
+
+    <script src="../src/audiogram.js"></script>
+</head>
+<body>
+
+<h1 style="text-align: center">Pure-tone audiogram</h1>
+<hr/>
+<div class="container-fluid  mr-5 ml-5">
+    <div class="row">
+        <div class="col-12">
+            <form id="subject-form"></form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6" id="right">
+            <h2 class="text-center">Right</h2>
+        </div>
+        <div class="col-6" id="left">
+            <h2 class="text-center">Left</h2>
+
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mr-5 ml-5">
+
+    <div class="row mt-5 d-print-none">
+        <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                Left click to add a point.<br> Right click to remove a point.<br> Use the buttons below to change
+                conduction or enable masking.
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3 d-print-none" style="display: none">
+        <div class="col-6">
+            <label for="conduction">Conduction</label><select class="form-select" id="conduction">
+            <option value="air">Air</option>
+            <option value="bone">Bone</option>
+        </select>
+        </div>
+
+        <div class="col-6">
+            <input type="checkbox" class="btn-check" id="masking" autocomplete="off">
+            <label class="btn btn-outline-primary w-100 mt-4" for="masking" id="masking-label">Masking is OFF</label>
+        </div>
+
+    </div>
+    <div class="row mt-3 reliability-form-container">
+        <div class="col-12 ">
+            <form id="reliability-form"></form>
+        </div>
+    </div>
+
+    <div class="row mt-3 mb-3  d-print-none">
+        <div class="col-12">
+            <button class="btn btn-primary w-100 p-5" id="submit">Submit</button>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    document.onreadystatechange = function () {
+        let left;
+        let right;
+        let r;
+        let s;
+        if (document.readyState === "complete") {
+            right = new Audiogram(document.getElementById("right"), {"ear" : "right", "yDomain":[-10, 120], "margin":{right:0, left:60}});
+            left = new Audiogram(document.getElementById("left"), {"ear" : "left", "yDomain":[-10, 120],  "margin":{right:0, left:60}});
+
+
+            const maskingLabel = document.getElementById("masking-label")
+            document.getElementById("masking").addEventListener("change", function () {
+                left.options.masking = this.checked;
+                right.options.masking = this.checked;
+
+                if (this.checked) {
+                    maskingLabel.innerText = "Masking is ON"
+                } else {
+                    maskingLabel.innerText = "Masking is OFF"
+
+                }
+            });
+
+            document.getElementById("conduction").addEventListener("change", function () {
+                console.log(this.value)
+                left.options.conduction = this.value;
+                right.options.conduction = this.value;
+            });
+
+
+            document.getElementById("submit").addEventListener("click", function () {
+                console.log(left.getData());
+            });
+
+            function subjectValidation(value, callback){
+                const parts = value.split("_")
+                const year = new Date().getFullYear().toString()
+                if (parts.length === 3 && parts[0] === year && parts[1] === "C2DNN" && parts[2].length !== 0 && !isNaN(parts[2])) {
+                    callback({
+                        "status": true
+                    });
+                    return
+                }
+                callback({
+                    "status": false,
+                    "message": "Geef een correcte Anonieme ID in. (Formaat = YYYY_C2DNN_99)"
+                });
+
+            }
+
+
+            s = $("#subject-form").alpaca({
+                "data": {"subjectID": new Date().getFullYear().toString() + "_C2DNN_"},
+                "schema": {
+                    "title": "Subject",
+                    "type": "object",
+                    "properties": {
+                        "subjectID": {
+                            "type": "string",
+                            "title": "Subject ID",
+                            "description": "Anonieme ID van de proefpersoon",
+                            "required": true
+                        },
+                    }
+                },
+                "options": {
+                    "fields": {
+                        "subjectID": {
+                            "validator": function(callback){
+                                 let value = this.getValue();
+                                 return subjectValidation(value, callback);
+                            }
+                        },
+                    }
+                }
+            });
+
+            r = $("#reliability-form").alpaca({
+                "schema": {
+                    "title": "Betrouwbaarheid",
+                    "type": "object",
+                    "properties": {
+                        "betrouwbaar": {
+                            "type": "string",
+                            "title": "Hoe betrouwbaar was de meting?",
+                            "required": true,
+                            "enum": ["Zeer betrouwbaar", "Betrouwbaar", "Minder betrouwbaar"],
+
+                        },
+                        "opmerkingen":
+                            {
+                                "type": "string",
+                                "title": "Extra opmerkingen",
+                            },
+                    }
+                },
+            });
+
+            function saveJSON(obj, path) {
+                const str = JSON.stringify(obj);
+                const blob = new Blob([str], {type: "text/json"});
+                saveAs(blob, path);
+            }
+
+            document.getElementById("submit").addEventListener("click", function () {
+                const data = {
+                    "left": left.getData()["left"],
+                    "right": right.getData()["right"],
+                }
+                const reliability = $("#reliability-form").alpaca("get");
+                const subject = $("#subject-form").alpaca("get");
+                const subjectID = subject.getValue()["subjectID"]
+                let callbackData  = {}
+                subjectValidation(subjectID, function(data){callbackData = data;})
+                if(callbackData["status"]) {
+                    const newData = $.extend({}, data, subject.getValue(), reliability.getValue())
+                    newData["date"] = moment().format();
+                    saveJSON(newData, "puretone_audiogram_" + newData["subjectID"] + ".json")
+                    $(".reliability-form-container").append('<div class="col-12 temp-container"><p><bold>Date:</bold> ' + newData["date"] + '</p></div>');
+                    document.title = "puretone_audiogram_" + newData["subjectID"];
+                    window.print();
+                    $(".reliability-form-container .temp-container").remove()
+
+                } else {
+                    alert("Fill in every field correctly.")
+                }
+
+
+            });
+        }
+
+    }
+
+
+</script>
+
+
+</body>
+</html>

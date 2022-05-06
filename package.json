@@ -1,0 +1,28 @@
+{
+  "name": "pure-tone-audiogram",
+  "version": "0.1.0",
+  "description": "Software to mark the results of a pure tone audiogram, using the d3.js library and written in plain javascript.",
+  "main": "src/audiogram.js",
+  "license": "GPL-3.0-only",
+  "author": "Bernd Accou",
+  "scripts": {
+    "test": "standard src/audiogram.js && jest  --notify --config=jest.config.js tests/*",
+    "lint": "standard --fix src",
+    "build": "gulp build",
+    "clean": "gulp clean"
+  },
+  "devDependencies": {
+    "babel-jest": "^26.6.3",
+    "d3": "^3.5.17",
+    "gulp": "^4.0.2",
+    "gulp-clean": "^0.4.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-uglify": "^3.0.2",
+    "jest": "^26.6.3",
+    "qunit": "^2.14.0",
+    "standard": "^16.0.3",
+    "uglify-es": "^3.3.9",
+    "vinyl-map": "^1.0.2"
+  }
+}

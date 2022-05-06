@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pure tone audiogram</title>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+            crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="../dist/audiogram.js"></script>
+</head>
+<body>
+
+<h1 style="text-align: center">Pure-tone audiogram</h1>
+<hr/>
+<div class="container-fluid  mr-5 ml-5">
+    <div class="row">
+        <div class="col-6" id="right">
+            <h2 class="text-center" style="margin-left:80px;">Right</h2>
+        </div>
+        <div class="col-6" id="left">
+            <h2 class="text-center" style="margin-left:80px;">Left</h2>
+
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mr-5 ml-5">
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                Left click to add a point.<br> Right click to remove a point.
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-6">
+            <label for="conduction">Conduction</label><select class="form-select" id="conduction">
+            <option value="air">Air</option>
+            <option value="bone">Bone</option>
+        </select>
+        </div>
+
+        <div class="col-6">
+            <input type="checkbox" class="btn-check" id="masking" autocomplete="off">
+            <label class="btn btn-outline-primary w-100 mt-4" for="masking" id="masking-label">Masking is OFF</label>
+        </div>
+
+    </div>
+
+    <div class="row mt-3 mb-3">
+        <div class="col-12">
+            <button class="btn btn-primary w-100 p-5" id="submit">Submit</button>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    document.onreadystatechange = function () {
+        let left;
+        let right;
+        if (document.readyState === "complete") {
+            right = new Audiogram(document.getElementById("right"), {"ear":"right"});
+            left = new Audiogram(document.getElementById("left"), {"ear": "left"});
+
+
+            const maskingLabel = document.getElementById("masking-label")
+            document.getElementById("masking").addEventListener("change", function () {
+                left.options.masking = this.checked;
+                right.options.masking = this.checked;
+
+                if (this.checked) {
+                    maskingLabel.innerText = "Masking is ON"
+                } else {
+                    maskingLabel.innerText = "Masking is OFF"
+
+                }
+            });
+
+            document.getElementById("conduction").addEventListener("change", function () {
+                left.options.conduction = this.value;
+                right.options.conduction = this.value;
+            });
+
+
+            document.getElementById("submit").addEventListener("click", function () {
+                let leftData = left.getData();
+                let rightData = right.getData()
+                alert(
+                    JSON.stringify(Audiogram.objectExtend(Audiogram.objectExtend({}, leftData), rightData))
+                )
+            });
+        }
+    }
+
+
+</script>
+
+
+</body>
+</html>
