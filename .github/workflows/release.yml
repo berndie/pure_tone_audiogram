@@ -1,4 +1,4 @@
-name: Publish GitHub Pages
+name: GitHub Pages
 
 on:
   push:
@@ -9,8 +9,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-20.04
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -18,8 +17,12 @@ jobs:
         run: npm install
       - name: npm build
         run: npm run build
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./examples
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Release (javascrip files)"
+          files: |
+            LICENSE.txt
+            dist/*
