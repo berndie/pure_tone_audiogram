@@ -4,6 +4,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: npm install
-      - run: npm run test
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: npm install
+        run: npm install
+      - name: test
+        run: npm test
+
+
+
 
