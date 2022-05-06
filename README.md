@@ -10,7 +10,8 @@ electronically. In deployment, the only dependency is [d3.js](https://d3js.org/)
 ## How to use on your website
 
 After running `npm install && npm run build`, you can find the files you will need to include for 
-your website in the [dist](./dist) folder. We provide following possibilities:
+your website in the [dist](./dist) folder. If don't want to compile these files yourself,
+no problem! [You can download the precompiled versions here](https://github.com/berndie/puretoneaudiogram.js/releases/tag/latest). We provide following possibilities:
 
 * `audiogram.js`: The sourcecode, external import for `d3.js` necessary
 * `audiogram.min.js`: The minimized sourcecode, external import for `d3.js` necessary 

@@ -24,5 +24,5 @@ jobs:
           prerelease: false
           title: "Release (javascrip files)"
           files: |
-            LICENSE.txt
+            LICENSE
             dist/*
