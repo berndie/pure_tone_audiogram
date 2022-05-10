@@ -5,7 +5,7 @@ recording  tool. With this, you can save the result of your audiogram
 electronically. In deployment, the only dependency is [d3.js](https://d3js.org/)
 (version 3 is the only version that is supported).
 
-[If you want to play with some examples, you can find them here](https://berndie.github.io/puretoneaudiogram.js/examples/index.html)
+[If you want to play with some examples, you can find them here](https://berndie.github.io/puretoneaudiogram.js/)
 
 ## How to use on your website
 
@@ -19,8 +19,8 @@ no problem! [You can download the precompiled versions here](https://github.com/
 
 
 * `audiogram.mjs`: The sourcecode, packaged as a [javascript module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules), external import for `d3.js` necessary
-* `audiogram.min.mjs`: The sourcecode, packaged as a minimized [javascript module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
-* `audiogram.min.mjs`: The sourcecode, packaged as a minimized [javascript module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules), packaged with `d3.js`
+* `audiogram.min.mjs`: The sourcecode, packaged as a minimized [javascript module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules), external import for `d3.js` necessary
+* `audiogram_d3.min.mjs`: The sourcecode, packaged as a minimized [javascript module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules), packaged with `d3.js`
 
 Concrete examples can be found in the `examples` folder.
 
