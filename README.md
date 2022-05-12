@@ -58,7 +58,7 @@ Concrete examples can be found in the `examples` folder.
 ```
 
 You can change the `ear`, `conduction` and `masking` values dynamically (see
- `examples/single_example`).
+ [examples/single_example.html](examples/single_example.html)).
 
 For more elaborate examples, have a look at the [examples](./examples) folder.
 
@@ -238,7 +238,9 @@ let options = {
             'l' + 0 + ',' + (-size) +
             'l' + (size / 2) + ',' + 0
         }
-      }
+      },
+       // Precision to be used when comparing floats
+      floatPrecision: 0.001
   }
 ```
 
@@ -251,7 +253,7 @@ npm install
 ```
 Testing, linting, building and cleaning is done with `npm run test`, `npm run lint`,
 `npm run build` and `npm run clean` respectively. All scripts are written using `gulp`.
-For linting [standardjs](https://standardjs.com/) is used, for testing [jest](https://jestjs.io/) is used. Tests can be found in `tests`.
+For linting [standardjs](https://standardjs.com/) is used, for testing [jest](https://jestjs.io/) is used. Tests can be found in [tests](tests).
 
 
 

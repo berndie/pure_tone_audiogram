@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master  # Set a branch name to trigger deployment
-  pull_request:
 
 jobs:
   deploy:
@@ -22,7 +21,7 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
           prerelease: false
-          title: "Release (javascrip files)"
+          title: "Release (javascript files)"
           files: |
             LICENSE
             dist/*
